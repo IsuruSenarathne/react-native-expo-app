@@ -12,7 +12,6 @@ class CameraSection extends React.Component {
         type: Camera.Constants.Type.back
       }
     };
-    // this.camera = React.createRef(null)
   }
 
   componentDidMount() {
@@ -54,28 +53,6 @@ class CameraSection extends React.Component {
                 flexDirection: "row"
               }}
             >
-              {/* <TouchableOpacity
-                style={{
-                  flex: 0.1,
-                  alignSelf: "flex-end",
-                  alignItems: "center"
-                }}
-                onPress={() => {
-                  setCamera({
-                    type:
-                      this.state.camera.type === Camera.Constants.Type.back
-                        ? Camera.Constants.Type.front
-                        : Camera.Constants.Type.back
-                  });
-                }}
-              >
-                <Text
-                  style={{ fontSize: 18, marginBottom: 10, color: "white" }}
-                >
-                  {" "}
-                  Flip{" "}
-                </Text>
-              </TouchableOpacity> */}
               <TouchableOpacity
                 style={{
                   //   flex: 0.1,
