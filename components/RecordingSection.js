@@ -7,13 +7,13 @@ import * as MailComposer from "expo-mail-composer";
 
 const soundObject = new Audio.Sound();
 
-export default function RecordingSection({setRecording}) {
+export default function RecordingSection({ setRecording }) {
   const [sound, setSound] = React.useState("");
   const [recording, setNewRecording] = React.useState(new Audio.Recording());
 
   const handleStartRecord = async () => {
     const recording = new Audio.Recording();
-    setNewRecording(recording)
+    setNewRecording(recording);
     Audio.requestPermissionsAsync();
     Alert.alert("started...");
     console.log("no error");
@@ -22,11 +22,8 @@ export default function RecordingSection({setRecording}) {
         Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
       );
       await recording.startAsync();
-      // You are now recording!
     } catch (error) {
       console.log(error);
-
-      // An error occurred!
     }
   };
 
@@ -38,12 +35,12 @@ export default function RecordingSection({setRecording}) {
       console.log(await recording.getStatusAsync());
 
       const uri = recording.getURI();
-      setSound(uri)
+      setSound(uri);
       console.log(recording.getURI());
       MediaLibrary.saveToLibraryAsync(recording.getURI());
 
       const soundObj = await recording.createNewLoadedSoundAsync();
-      setRecording(uri)
+      setRecording(uri);
       // FileSystem.downloadAsync(recording.getURI(), FileSystem.documentDirectory + 'lolfile.mp3')
       //   .then(({ uri }) => {
       //     console.log("finished downloading to", uri);
@@ -61,7 +58,6 @@ export default function RecordingSection({setRecording}) {
       // An error occurred!
     }
   };
-
 
   return (
     <View style={styles.container}>
