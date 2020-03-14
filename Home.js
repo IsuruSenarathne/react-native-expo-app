@@ -66,9 +66,9 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    console.log("sssss", this.props.route.params?.photo);
+    const {photo} = this.props.route.params
     this._getLocationAsync();
-    if (this.props.route.params?.photo) {
+    if (photo) {
       this.setState({ photo: this.props.route.params?.photo.uri });
     }
   }
