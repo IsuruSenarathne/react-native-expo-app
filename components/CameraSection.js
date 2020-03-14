@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Camera } from "expo-camera";
 import * as Permissions from "expo-permissions";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 
 class CameraSection extends React.Component {
   constructor(props) {
@@ -28,7 +30,9 @@ class CameraSection extends React.Component {
   takePhoto = async () => {
     let photo = await this.camera.takePictureAsync();
     console.log(photo.uri);
-    this.props.setPhoto(photo.uri);
+    this.props.navigation.navigate("Home", {
+      photo
+    });
   };
 
   render() {
