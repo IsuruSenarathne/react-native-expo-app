@@ -8,8 +8,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Constants from "expo-constants";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
+import _ from "lodash";
 
-class App extends React.Component {
+export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -65,20 +66,30 @@ class App extends React.Component {
     this.setState({ location });
   };
 
-  componentDidMount() {
-    const {photo} = this.props.route.params
-    this._getLocationAsync();
-    if (photo) {
-      this.setState({ photo: this.props.route.params?.photo.uri });
+  componentDidUpdate(prevProps, prevState) {
+    // console.log("this.props.route.params>>>>>>>>", this.props.route.params);
+    if (!_.isEqual(prevProps.route.params, this.props.route.params)) {
+      const photo = this.props.route.params
+        ? this.props.route.params.photo
+        : "";
+      if (photo) {
+        this.setState({ photo: this.props.route.params?.photo.uri });
+      }
     }
   }
+
+  componentDidMount() {
+    this._getLocationAsync();
+  }
+
   render() {
-    console.log(this.state);
+    // console.log('this.state--->>>>', this.state);
     return (
       <>
         <View style={styles.container}>
           <Text>Home Screen</Text>
           <Button
+            style={styles.button}
             title="Go to Camera"
             onPress={() => this.props.navigation.navigate("Camera")}
           />
@@ -90,13 +101,15 @@ class App extends React.Component {
   }
 }
 
-export default App;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center"
+  },
+  button: {
+    width: "400px",
+    backgroundColor: "red"
   }
 });
