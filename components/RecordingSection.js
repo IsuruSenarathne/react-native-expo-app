@@ -8,20 +8,22 @@ import * as MailComposer from "expo-mail-composer";
 const soundObject = new Audio.Sound();
 
 export default function RecordingSection({ setRecording }) {
-  const [sound, setSound] = React.useState("");
-  const [recording, setNewRecording] = React.useState(new Audio.Recording());
+  let [recording, setNewRecording] = React.useState(new Audio.Recording());
+  let [isRec, setIsRec] = React.useState(false);
+  let [recStatus, setRecStatus] = React.useState({});
+  let [soundObj, setSoundObj] = React.useState(null);
+  let [recUri, setRecUri] = React.useState("./assets/sounds/hello.mp3");
 
   const handleStartRecord = async () => {
     const recording = new Audio.Recording();
     setNewRecording(recording);
     Audio.requestPermissionsAsync();
-    Alert.alert("started...");
-    console.log("no error");
     try {
       await recording.prepareToRecordAsync(
         Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
       );
       await recording.startAsync();
+      setIsRec(true);
     } catch (error) {
       console.log(error);
     }
@@ -29,50 +31,70 @@ export default function RecordingSection({ setRecording }) {
 
   const handleStopRecord = async () => {
     try {
-      MediaLibrary.requestPermissionsAsync();
       await recording.stopAndUnloadAsync();
-      Alert.alert("stopped");
-      console.log(await recording.getStatusAsync());
 
       const uri = recording.getURI();
-      setSound(uri);
-      console.log(recording.getURI());
-      MediaLibrary.saveToLibraryAsync(recording.getURI());
 
       const soundObj = await recording.createNewLoadedSoundAsync();
       setRecording(uri);
-      // FileSystem.downloadAsync(recording.getURI(), FileSystem.documentDirectory + 'lolfile.mp3')
-      //   .then(({ uri }) => {
-      //     console.log("finished downloading to", uri);
-      //   })
-      //   .catch(error => {
-      //     console.error(error);
-      //   });
-      // console.log({soundObj})
-      // await soundObject.loadAsync(require('./assets/sounds/hello.mp3'));
-      await soundObj.sound.playAsync();
-      // You are now recording!
+      setRecUri(uri);
+      setIsRec(false);
+      setRecStatus(await recording.getStatusAsync());
+      setSoundObj(soundObj);
     } catch (error) {
-      Alert.alert("stoppedeee");
       console.log(error);
       // An error occurred!
     }
   };
 
+  const handlePlayRecord = async () => {
+    const soundObject = new Audio.Sound();
+    try {
+      await soundObject.loadAsync({ uri: recUri });
+      await soundObject.playAsync();
+      // Your sound is playing!
+    } catch (error) {
+      // An error occurred!
+    }
+  };
+
+  function Separator() {
+    return <View style={styles.separator} />;
+  }
+
   return (
     <View style={styles.container}>
-      <Text>Recording Section</Text>
-      <Button title="Start" onPress={() => handleStartRecord()} />
-      <Button title="Stop" onPress={() => handleStopRecord()} />
+      <View style={styles.head}>
+        {!isRec ? (
+          <Text>Press Start to record audio</Text>
+        ) : (
+          <Text>Recording started...</Text>
+        )}
+      </View>
+
+      {!isRec && (
+        <Button title="Start Recording" onPress={() => handleStartRecord()} />
+      )}
+      {isRec && (
+        <Button title="Stop Recording" onPress={() => handleStopRecord()} />
+      )}
+      <Separator />
+      {soundObj && (
+        <Button title="Play recording" onPress={() => handlePlayRecord()} />
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
+    padding: 40
+    // flex: 1,
+    // backgroundColor: "#fff",
+    // alignItems: "center",
+    // justifyContent: "center"
+  },
+  separator: {
+    marginVertical: 8
   }
 });

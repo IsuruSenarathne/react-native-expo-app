@@ -44,7 +44,7 @@ class CameraSection extends React.Component {
       return (
         <View style={{ flex: 1 }}>
           <Camera
-            style={{ flex: 1 }}
+            style={{ height: '80%', width: '100%' }}
             type={this.state.camera.type}
             ref={ref => {
               this.camera = ref;
@@ -67,7 +67,7 @@ class CameraSection extends React.Component {
               >
                 <Text
                   style={{
-                    fontSize: 18,
+                    fontSize: 24,
                     marginBottom: 10,
                     color: "white",
                     width: 200,

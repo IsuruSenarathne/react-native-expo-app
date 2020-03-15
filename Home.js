@@ -1,5 +1,12 @@
 import React from "react";
-import { StyleSheet, Text, View, Button, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Alert,
+  SafeAreaView
+} from "react-native";
 import RecordingSection from "./components/RecordingSection";
 import CameraSection from "./components/CameraSection";
 import * as MailComposer from "expo-mail-composer";
@@ -44,12 +51,16 @@ export default class App extends React.Component {
           this.state.location.longitude +
           "\nLatitude: " +
           this.state.location.latitude,
-        attachments: [photo, recording]
+        attachments: _.compact([photo, recording])
       };
       MailComposer.composeAsync(saveOptions);
     } catch (error) {
       console.error(error);
     }
+  };
+
+  Separator = () => {
+    return <View style={styles.separator} />;
   };
 
   _getLocationAsync = async () => {
@@ -86,16 +97,19 @@ export default class App extends React.Component {
     // console.log('this.state--->>>>', this.state);
     return (
       <>
+        {/* <SafeAreaView style={styles.container}> */}
+        <RecordingSection setRecording={this.setRecording} />
         <View style={styles.container}>
-          <Text>Home Screen</Text>
+          <Text>Take Photo</Text>
           <Button
-            style={styles.button}
+            // style={styles.button}
             title="Go to Camera"
             onPress={() => this.props.navigation.navigate("Camera")}
           />
-          <RecordingSection setRecording={this.setRecording} />
+          {this.Separator()}
           <Button title="SEND EMAIL" onPress={() => this.handleEmail()} />
         </View>
+        {/* </SafeAreaView> */}
       </>
     );
   }
@@ -103,13 +117,22 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
+    padding: 40
   },
-  button: {
-    width: "400px",
-    backgroundColor: "red"
+  title: {
+    textAlign: "center",
+    marginVertical: 8
+  },
+  fixToText: {
+    // flexDirection: 'row',
+    // justifyContent: 'space-between',
+  },
+  separator: {
+    marginVertical: 8,
+    borderBottomColor: "#737373",
+    borderBottomWidth: StyleSheet.hairlineWidth
+  },
+  separator: {
+    marginVertical: 8
   }
 });
